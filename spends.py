@@ -1,15 +1,36 @@
 def ads_query(start_date,end_date):
     query2 = f'''
-    select distinct platform, "campaignName","adsetName","adName","adId","clicks","impressions","reach","spend","reportDate" from "AdStats"
-where "reportDate" between '{start_date}' and '{end_date}'
+     SELECT
+    a.platform,
+    a."campaignName",
+    a."adName",
+    a."adsetName",
+    a."landingUrl",
+    "adId",
+    a.spend AS spends,
+    a.impressions AS impressions,
+
+        CASE
+            WHEN a.platform = 'facebook' THEN a."inlineLinkClicks"
+            ELSE a.clicks
+        END
+     AS clicks
+FROM "AdStats" a
+WHERE a."reportDate" BETWEEN '{start_date}' AND '{end_date}'
+GROUP BY
+    a.platform,
+    a."campaignName",
+    a."adName",
+    a."adsetName",
+    a."landingUrl",
+    a."adId",
+    a.spend,
+    a.impressions,
+    a."inlineLinkClicks",
+    a.clicks
 '''
     return query2
-def ads_query2(start_date,end_date):
-    query2 = f'''
-    select distinct platform, "campaignName","adsetName","adName","adId","clicks","impressions","reach","spend","reportDate","landingUrl" from "AdStats"
-where "reportDate" between '{start_date}' and '{end_date}'
-'''
-    return query2
+
 
 
 
